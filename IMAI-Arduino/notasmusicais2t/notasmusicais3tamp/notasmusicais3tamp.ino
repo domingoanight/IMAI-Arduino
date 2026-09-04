@@ -68,7 +68,7 @@ void tocarNotaI2S(float frequencia, int duracao_ms, int intensidade_vibracao) {
   analogWrite(PINO_VIBRACAO, intensidade_vibracao);
 */
   for (int i = 0; i < total_amostras; i++) {
-    int16_t sample = (int16_t)(sin(i * 2.0 * M_PI * frequencia / sample_rate) * 10000);
+    int16_t sample = (int16_t)(sin(i * 2.0 * M_PI * frequencia / sample_rate) * 24000);
     int16_t buffer[2] = {sample, sample};
     i2s_write(i2s_num, &buffer, sizeof(buffer), &bytes_escritos, portMAX_DELAY);
   }

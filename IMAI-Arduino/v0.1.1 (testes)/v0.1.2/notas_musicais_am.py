@@ -124,6 +124,7 @@ nota_detectada = "Silencio"
 confianca = 0.0
 pontos_mao_para_desenho = None
 
+modo_acorde = "maior" 
 
 def thread_mediapipe():
     global nota_detectada, confianca, pontos_mao_para_desenho, frame_para_processar
@@ -145,21 +146,34 @@ def thread_mediapipe():
         nota_local = "Silencio"
         confianca_local = 0.0
         pontos_local = None
+        modo_local = "maior"  # Valor padrão
 
         if resultado.hand_landmarks:
             pontos_local = resultado.hand_landmarks
-            for pontos_mao in resultado.hand_landmarks:
-                features = extrair_features(pontos_mao)
-                proba = clf.predict_proba([features])[0]
-                idx_max = np.argmax(proba)
-                confianca_local = proba[idx_max]
-                if confianca_local >= 0.60:
-                    nota_local = clf.classes_[idx_max]
+
+            for i, pontos_mao in enumerate(resultado.hand_landmarks):
+                lado = resultado.hand_handedness[i].category_name # "Left" ou "Right"
+                if lado == "Right": # Classifica a nota
+                    features = extrair_features(pontos_mao)
+                elif lado == "Left": # Classifica a nota
+                    modo_local = detectar_mao_esquerda(pontos_mao)
 
         with resultado_lock:
             nota_detectada = nota_local
             confianca = confianca_local
             pontos_mao_para_desenho = pontos_local
+            modo_acorde = modo_local
+
+    def detectar_mao_esquerda (pontos_mao):
+        # Pontas = 8, 12, 16, 20
+        # Articulações = 6, 10, 14, 18
+        pontas = [pontos_mao[i].y for i in [8, 12, 16, 20]]
+        articulacoes = [pontos_mao[i].y for i in [6, 10, 14, 18]]
+
+        dedos_fechados = sum(p > a for p, a in zip(pontas, articulacoes))
+
+        # 3 ou mais dedos fechados = punho = modo menor  # Implementar a lógica para detectar a mão esquerda
+        return "menor" if dedos_fechados >= 3 else "maior"
 
 
 worker = threading.Thread(target=thread_mediapipe, daemon=True)
