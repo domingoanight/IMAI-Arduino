@@ -24,8 +24,10 @@ NOME_DA_CAMERA_DESEJADA = "OBS Virtual Camera"
 # CONFIGURAÇÕES GERAIS
 
 PORTA_SERIAL   = 'COM9'
-ARQUIVO_MODELO = r"C:\Users\INFORMÁTICA\Documents\projeto ruan 3 bimestre\IMAI-Arduino\v0.1.1 (testes)\modelo_notas.pkl"
+ARQUIVO_MODELO = r"C:\Users\INFORMÁTICA\Documents\projeto ruan 3 bimestre\IMAI-Arduino\v0.1.1 (testes)\v0.1.2\modelo_notas.pkl"
+# ARQUIVO_MODELO = r"C:\Users\INFORMÁTICA\Documents\projeto ruan 3 bimestre\IMAI-Arduino\v0.1.1 (testes)\v0.1.2\modelo_notas.pkl"
 # ARQUIVO_MODELO = "modelo_notas.pkl"
+# Arrumar questão de localização de landmark
 
 MAPA_NOTA_COMANDO = {
     "Do (C)": "C", "Re (D)": "D", "Mi (E)": "E", "Fa (F)": "F",
@@ -70,7 +72,9 @@ print("Modelo de IA carregado.")
 # SETUP DO MEDIAPIPE (Com suporte a pastas com acento no Windows)
 
 caminho_atual = os.path.dirname(os.path.abspath(__file__))
-modelo_path = os.path.join(caminho_atual, '..', 'hand_landmarker.task')
+modelo_path = os.path.join(caminho_atual, '..', r'C:\Users\INFORMÁTICA\Documents\projeto ruan 3 bimestre\IMAI-Arduino\hand_landmarker.task')
+# modelo_path = os.path.join(caminho_atual, '..', 'hand_landmarker.task')
+# Arrumar questão de localização de landmark
 
 if not os.path.exists(modelo_path):
     print(f"Arquivo '{modelo_path}' não encontrado!")
